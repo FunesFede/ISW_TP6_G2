@@ -1,4 +1,3 @@
-# Implementación inicial del servicio
 from datetime import date
 from typing import List
 
