@@ -133,3 +133,115 @@ def test_inscripcion_con_el_parque_cerrado_falla(calendario, servicio):
 
     with pytest.raises(ParqueCerradoError):
         servicio.inscribir(crear_solicitud())
+
+
+def test_inscripcion_sin_aceptar_terminos_y_condiciones_falla(servicio):
+    with pytest.raises(TerminosNoAceptadosError):
+        servicio.inscribir(crear_solicitud(acepta_terminos=False))
+
+
+def test_inscripcion_sin_talle_a_actividad_que_lo_requiere_falla(servicio):
+    visitantes = [Visitante(nombre="Ana", dni="30111222", edad=25)]
+
+    with pytest.raises(TalleRequeridoError):
+        servicio.inscribir(
+            crear_solicitud(actividad="Tirolesa", visitantes=visitantes)
+        )
+
+
+def test_inscripcion_con_talle_a_actividad_que_lo_requiere_pasa(servicio):
+    visitantes = [
+        Visitante(nombre="Ana", dni="30111222", edad=25, talle="M"),
+    ]
+
+    inscripcion = servicio.inscribir(
+        crear_solicitud(actividad="Tirolesa", visitantes=visitantes)
+    )
+
+    assert inscripcion.visitantes[0].talle == "M"
+
+
+def test_inscripcion_sin_talle_a_actividad_que_no_lo_requiere_pasa(servicio):
+    visitantes = [Visitante(nombre="Ana", dni="30111222", edad=25)]
+
+    inscripcion = servicio.inscribir(
+        crear_solicitud(actividad="Jardinería", visitantes=visitantes)
+    )
+
+    assert inscripcion.actividad == "Jardinería"
+
+
+def test_inscripcion_sin_visitantes_falla(servicio):
+    with pytest.raises(DatosVisitanteInvalidosError):
+        servicio.inscribir(crear_solicitud(visitantes=[]))
+
+
+@pytest.mark.parametrize(
+    "visitante",
+    [
+        Visitante(nombre="", dni="30111222", edad=25),
+        Visitante(nombre="Ana", dni="", edad=25),
+        Visitante(nombre="Ana", dni="30.111.222", edad=25),
+        Visitante(nombre="Ana", dni="123", edad=25),
+        Visitante(nombre="Ana", dni="30111222", edad=-1),
+    ],
+    ids=["sin-nombre", "sin-dni", "dni-con-puntos", "dni-corto",
+         "edad-negativa"],
+)
+def test_inscripcion_con_datos_de_visitante_invalidos_falla(
+    servicio, visitante
+):
+    with pytest.raises(DatosVisitanteInvalidosError):
+        servicio.inscribir(crear_solicitud(visitantes=[visitante]))
+
+
+def test_inscripcion_exitosa_descuenta_los_cupos_del_turno(
+    repositorio, servicio
+):
+    visitantes = [
+        Visitante(nombre="Ana", dni="30111222", edad=25),
+        Visitante(nombre="Luis", dni="31222333", edad=30),
+    ]
+
+    servicio.inscribir(crear_solicitud(visitantes=visitantes))
+
+    assert repositorio.obtener("Safari", HORARIO).cupos_disponibles == 8
+
+
+def test_inscripcion_fallida_no_descuenta_cupos(repositorio, servicio):
+    with pytest.raises(TerminosNoAceptadosError):
+        servicio.inscribir(crear_solicitud(acepta_terminos=False))
+
+    assert repositorio.obtener("Safari", HORARIO).cupos_disponibles == 10
+
+
+def test_cada_inscripcion_tiene_un_codigo_unico(servicio):
+    primera = servicio.inscribir(crear_solicitud())
+    segunda = servicio.inscribir(crear_solicitud(visitantes=[
+        Visitante(nombre="Luis", dni="31222333", edad=30),
+    ]))
+
+    assert primera.codigo
+    assert primera.codigo != segunda.codigo
+
+
+def test_inscripcion_exitosa_envia_mail_de_confirmacion_con_qr(
+    servicio, notificador
+):
+    inscripcion = servicio.inscribir(crear_solicitud())
+
+    assert len(notificador.enviados) == 1
+    destinatario, inscripcion_enviada, qr_png = notificador.enviados[0]
+    assert destinatario == "ana@mail.com"
+    assert inscripcion_enviada == inscripcion
+    assert qr_png == b"QR:" + inscripcion.codigo.encode()
+
+
+def test_inscripcion_fallida_no_envia_mail(servicio, notificador):
+    with pytest.raises(SinCupoError):
+        servicio.inscribir(crear_solicitud(visitantes=[
+            Visitante(nombre=f"P{i}", dni=str(30111220 + i), edad=20)
+            for i in range(11)
+        ]))
+
+    assert notificador.enviados == []
