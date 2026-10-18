@@ -1,0 +1,102 @@
+.confirmacion {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px 16px 56px;
+}
+
+.confirmacion__tarjeta {
+  background: var(--papel);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 26px 20px;
+  display: grid;
+  gap: 18px;
+  border-top: 6px solid var(--helecho);
+}
+
+.confirmacion__eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--helecho);
+}
+
+.confirmacion h1 {
+  font-weight: 900;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--bosque);
+}
+
+.confirmacion__datos {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.confirmacion__datos dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tinta-suave);
+}
+
+.confirmacion__datos dd {
+  margin: 2px 0 0;
+  font-weight: 700;
+}
+
+.confirmacion__personas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.confirmacion__personas span {
+  font-weight: 400;
+  color: var(--tinta-suave);
+  font-size: 0.9rem;
+}
+
+.confirmacion__codigo {
+  display: grid;
+  gap: 2px;
+  padding: 14px 16px;
+  border-radius: var(--radio-chico);
+  background: var(--crema);
+  border: 1.5px dashed #cdbf98;
+}
+
+.confirmacion__codigo span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tinta-suave);
+}
+
+.confirmacion__codigo strong {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--bosque);
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+}
+
+.confirmacion__correo { color: var(--tinta-suave); }
+
+.confirmacion__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 480px) {
+  .confirmacion__acciones .boton { width: 100%; }
+}

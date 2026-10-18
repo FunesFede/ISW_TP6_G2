@@ -1,0 +1,204 @@
+/* Paleta y fuente indicadas por los PO (FAQ 3). */
+:root {
+  --bosque: #386641;
+  --helecho: #6a994e;
+  --brote: #a7c957;
+  --crema: #f2e8cf;
+  --rojo: #bc4749;
+
+  --tinta: #1f2b1d;
+  --tinta-suave: #56624f;
+  --papel: #fffdf7;
+  --linea: #ddd3b8;
+  --bosque-oscuro: #2b5033;
+  --rojo-claro: #f6e0dd;
+
+  --radio: 14px;
+  --radio-chico: 9px;
+  --sombra: 0 1px 2px rgb(31 43 29 / 8%), 0 6px 20px rgb(31 43 29 / 6%);
+
+  font-family: Lato, system-ui, sans-serif;
+  color: var(--tinta);
+  background: var(--crema);
+  -webkit-font-smoothing: antialiased;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body { margin: 0; min-height: 100vh; line-height: 1.5; }
+
+h1, h2, h3, p { margin: 0; }
+
+button, input, select { font: inherit; color: inherit; }
+
+img { max-width: 100%; display: block; }
+
+[hidden] { display: none !important; }
+
+:focus-visible {
+  outline: 3px solid var(--brote);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* Encabezado */
+.encabezado {
+  background: var(--papel);
+  border-bottom: 1px solid var(--linea);
+}
+
+.encabezado__contenido {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.encabezado__marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--bosque);
+}
+
+.encabezado__marca img { width: 48px; height: auto; }
+
+.encabezado__nombre {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  color: #6b7759;
+}
+
+.encabezado__usuario {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--tinta-suave);
+}
+
+.encabezado__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--helecho);
+  color: var(--papel);
+  font-weight: 700;
+}
+
+@media (max-width: 420px) {
+  .encabezado__usuario-nombre { display: none; }
+}
+
+/* Piezas comunes */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--bosque);
+  color: var(--papel);
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.boton:hover:not(:disabled) { background: var(--bosque-oscuro); }
+
+.boton:disabled { opacity: 0.6; cursor: progress; }
+
+.boton--secundario {
+  background: transparent;
+  color: var(--bosque);
+  box-shadow: inset 0 0 0 2px var(--bosque);
+}
+
+.boton--secundario:hover:not(:disabled) { background: rgb(56 102 65 / 8%); }
+
+.boton--ancho { width: 100%; }
+
+.enlace {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--bosque);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.nota {
+  font-size: 0.875rem;
+  color: var(--tinta-suave);
+}
+
+.aviso {
+  padding: 12px 14px;
+  border-radius: var(--radio-chico);
+  font-size: 0.95rem;
+}
+
+.aviso--error {
+  background: var(--rojo-claro);
+  color: #7d2a2c;
+  border-left: 4px solid var(--rojo);
+}
+
+.etiqueta {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgb(167 201 87 / 28%);
+  color: var(--bosque-oscuro);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.campo label,
+.campo legend {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.campo input[type='text'],
+.campo input[type='email'] {
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1.5px solid var(--linea);
+  border-radius: var(--radio-chico);
+  background: #fff;
+}
+
+.campo input:focus-visible { border-color: var(--helecho); outline-offset: 0; }
+
+.campo--error input[type='text'],
+.campo--error input[type='email'] { border-color: var(--rojo); }
+
+.campo__error {
+  font-size: 0.82rem;
+  color: #9a3436;
+}
