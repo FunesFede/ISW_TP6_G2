@@ -70,3 +70,49 @@ def test_notificador_bandeja_local_guarda_el_mail_como_eml(tmp_path):
     archivos = list(tmp_path.glob("*.eml"))
     assert len(archivos) == 1
     assert "ABC123" in archivos[0].name
+
+
+class ConexionSMTPEspia:
+    instancias = []
+
+    def __init__(self, host, puerto):
+        self.host, self.puerto = host, puerto
+        self.login_con = None
+        self.mensajes = []
+        ConexionSMTPEspia.instancias.append(self)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        return False
+
+    def starttls(self):
+        pass
+
+    def login(self, usuario, clave):
+        self.login_con = (usuario, clave)
+
+    def send_message(self, mensaje):
+        self.mensajes.append(mensaje)
+
+
+def test_notificador_smtp_envia_el_mensaje_al_servidor_configurado():
+    ConexionSMTPEspia.instancias.clear()
+    notificador = NotificadorSMTP(
+        host="smtp.ejemplo.com",
+        puerto=587,
+        usuario="parque",
+        clave="secreta",
+        remitente="p@eh.com",
+        fabrica_conexion=ConexionSMTPEspia,
+    )
+
+    notificador.enviar_confirmacion(
+        "ana@mail.com", crear_inscripcion(), FIRMA_PNG
+    )
+
+    conexion = ConexionSMTPEspia.instancias[0]
+    assert (conexion.host, conexion.puerto) == ("smtp.ejemplo.com", 587)
+    assert conexion.login_con == ("parque", "secreta")
+    assert conexion.mensajes[0]["To"] == "ana@mail.com"
