@@ -400,3 +400,17 @@ def test_inscripcion_con_dni_repetido_en_la_misma_solicitud_falla(servicio):
 
     with pytest.raises(DatosVisitanteInvalidosError):
         servicio.inscribir(crear_solicitud(visitantes=visitantes))
+
+
+def test_inscripcion_registrada_se_busca_por_codigo_con_su_email(servicio):
+    inscripcion = servicio.inscribir(crear_solicitud())
+
+    encontrada = servicio.buscar_inscripcion(inscripcion.codigo)
+
+    assert encontrada == inscripcion
+    assert encontrada.email == "ana@mail.com"
+
+
+def test_buscar_inscripcion_con_codigo_inexistente_falla(servicio):
+    with pytest.raises(InscripcionInexistenteError):
+        servicio.buscar_inscripcion("NOEXISTE")
