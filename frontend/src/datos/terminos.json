@@ -1,0 +1,100 @@
+{
+  "version": "1.0 · 16/10/2026",
+  "comunes": {
+    "inscripcion": {
+      "titulo": "Inscripción y cupos",
+      "puntos": [
+        "La inscripción se realiza a través de la aplicación de EcoHarmony Park y queda confirmada cuando el sistema emite el código de inscripción y envía el correo de confirmación.",
+        "Cada turno tiene un cupo limitado. Las inscripciones se asignan por orden de llegada hasta completar el cupo del turno.",
+        "La inscripción se habilita 24 horas antes del inicio del turno y cierra 15 minutos antes de que comience.",
+        "Si la cantidad de personas indicada supera los cupos disponibles, la inscripción se rechaza completa. No se inscribe a una parte del grupo.",
+        "Una misma persona no puede estar inscripta en dos actividades que se realizan en el mismo horario.",
+        "La actividad no tiene costo adicional."
+      ]
+    },
+    "datos": {
+      "titulo": "Datos de los participantes",
+      "puntos": [
+        "Quien realiza la inscripción declara que el nombre, el DNI, la edad y el talle de cada participante son verdaderos y completos.",
+        "El personal del parque puede pedir el DNI de cada participante antes de comenzar la actividad para verificar la edad declarada.",
+        "Quien inscribe a menores de edad declara contar con la autorización de sus padres, madres o responsables."
+      ]
+    },
+    "dia": {
+      "titulo": "El día de la actividad",
+      "puntos": [
+        "Cada participante debe presentarse en el punto de encuentro 10 minutos antes del horario del turno con el código QR recibido por correo y su DNI.",
+        "La actividad dura una hora. Quien llegue después del inicio puede perder su lugar sin reprogramación.",
+        "Los participantes deben seguir en todo momento las indicaciones del personal. El personal puede suspender la participación de quien no las respete o ponga en riesgo a otras personas, a los animales o a las instalaciones."
+      ]
+    },
+    "cambios": {
+      "titulo": "Cambios y suspensiones",
+      "puntos": [
+        "EcoHarmony Park puede reprogramar o suspender un turno por condiciones climáticas, por razones de seguridad o por el bienestar de los animales. En ese caso se avisa al correo indicado en la inscripción."
+      ]
+    },
+    "privacidad": {
+      "titulo": "Datos personales",
+      "puntos": [
+        "Los datos se usan solamente para gestionar la inscripción, verificar los requisitos de la actividad y planificar los turnos. Se tratan conforme a la Ley 25.326 de Protección de los Datos Personales y no se comparten con terceros salvo obligación legal."
+      ]
+    }
+  },
+  "actividades": {
+    "Tirolesa": {
+      "resumen": "Recorrido suspendido por cable entre plataformas sobre la reserva, con arnés y casco.",
+      "requisitos": {
+        "titulo": "Requisitos de la Tirolesa",
+        "puntos": [
+          "Cada participante debe tener 8 años o más el día de la actividad.",
+          "El talle de vestimenta de cada participante (XS a XXL) es obligatorio, porque se usa para preparar el arnés y el equipo de seguridad.",
+          "El uso del arnés, el casco y los guantes provistos por el parque es obligatorio durante todo el recorrido.",
+          "Se requiere calzado cerrado y cabello recogido. No se permite llevar objetos sueltos en las manos o en los bolsillos durante el recorrido.",
+          "Cada participante declara no tener una condición de salud que le impida realizar actividad física en altura. Si el equipo no se ajusta de forma segura, el personal puede impedir la participación.",
+          "La Tirolesa se suspende con viento fuerte, lluvia o tormenta eléctrica."
+        ]
+      }
+    },
+    "Safari": {
+      "resumen": "Recorrido guiado en vehículo por los sectores de animales terrestres del parque.",
+      "requisitos": {
+        "titulo": "Requisitos del Safari",
+        "puntos": [
+          "El Safari es apto para todas las edades y no requiere talle de vestimenta.",
+          "Los participantes deben permanecer sentados dentro del vehículo durante todo el recorrido y mantener brazos y cabeza dentro de la cabina.",
+          "No está permitido alimentar, tocar ni llamar a los animales, ni arrojar objetos desde el vehículo.",
+          "Se pueden tomar fotos sin flash. Se pide hablar en voz baja cerca de los recintos.",
+          "Los niños y niñas que no puedan permanecer sentados por su cuenta deben viajar en brazos de otro participante inscripto en el mismo turno."
+        ]
+      }
+    },
+    "Palestra": {
+      "resumen": "Muro de escalada con vías de distintas dificultades y aseguramiento a cargo de instructores.",
+      "requisitos": {
+        "titulo": "Requisitos de la Palestra",
+        "puntos": [
+          "Cada participante debe tener 12 años o más el día de la actividad.",
+          "El talle de vestimenta de cada participante (XS a XXL) es obligatorio, porque se usa para preparar el arnés.",
+          "El uso del arnés y del casco provistos por el parque es obligatorio. Solo se escala con la cuerda asegurada por un instructor.",
+          "Se requiere ropa cómoda y calzado deportivo. No se permite escalar con anillos, relojes ni objetos colgantes.",
+          "Cada participante declara no tener una condición de salud que le impida realizar actividad física intensa.",
+          "Se escala de a una persona por vía y siguiendo el orden que indica el instructor."
+        ]
+      }
+    },
+    "Jardinería": {
+      "resumen": "Taller práctico en la huerta y el vivero del parque, con plantas nativas.",
+      "requisitos": {
+        "titulo": "Requisitos de Jardinería",
+        "puntos": [
+          "Jardinería es apta para todas las edades y no requiere talle de vestimenta.",
+          "El parque provee guantes, herramientas y semillas. Las herramientas se usan solo con las indicaciones del personal y se devuelven al terminar.",
+          "Se recomienda ropa que se pueda ensuciar, gorra y protector solar.",
+          "Cada participante debe avisar al personal, antes de empezar, si tiene alergia a plantas, polen o picaduras de insectos.",
+          "Las plantas, semillas y herramientas del vivero no se pueden retirar del parque, salvo los plantines que el personal entregue al final del taller."
+        ]
+      }
+    }
+  }
+}
