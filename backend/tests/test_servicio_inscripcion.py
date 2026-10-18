@@ -245,3 +245,158 @@ def test_inscripcion_fallida_no_envia_mail(servicio, notificador):
         ]))
 
     assert notificador.enviados == []
+
+
+@pytest.mark.parametrize("talle", ["XS", "S", "M", "L", "XL", "XXL"])
+def test_inscripcion_con_talle_valido_pasa(servicio, talle):
+    visitantes = [
+        Visitante(nombre="Ana", dni="30111222", edad=25, talle=talle),
+    ]
+
+    inscripcion = servicio.inscribir(
+        crear_solicitud(actividad="Tirolesa", visitantes=visitantes)
+    )
+
+    assert inscripcion.visitantes[0].talle == talle
+
+
+@pytest.mark.parametrize("talle", ["XXXL", "m", "42", "Grande"])
+def test_inscripcion_con_talle_fuera_de_la_lista_falla(servicio, talle):
+    visitantes = [
+        Visitante(nombre="Ana", dni="30111222", edad=25, talle=talle),
+    ]
+
+    with pytest.raises(DatosVisitanteInvalidosError):
+        servicio.inscribir(
+            crear_solicitud(actividad="Tirolesa", visitantes=visitantes)
+        )
+
+
+@pytest.mark.parametrize(
+    "actividad, edad",
+    [("Tirolesa", 7), ("Palestra", 11)],
+)
+def test_inscripcion_con_visitante_menor_a_la_edad_minima_falla(
+    servicio, actividad, edad
+):
+    visitantes = [
+        Visitante(nombre="Ana", dni="30111222", edad=30, talle="M"),
+        Visitante(nombre="Tomi", dni="50111222", edad=edad, talle="S"),
+    ]
+
+    with pytest.raises(EdadInsuficienteError):
+        servicio.inscribir(
+            crear_solicitud(actividad=actividad, visitantes=visitantes)
+        )
+
+
+@pytest.mark.parametrize(
+    "actividad, edad",
+    [("Tirolesa", 8), ("Palestra", 12), ("Safari", 0), ("Jardinería", 0)],
+)
+def test_inscripcion_con_visitante_de_la_edad_minima_pasa(
+    servicio, actividad, edad
+):
+    visitantes = [
+        Visitante(nombre="Tomi", dni="50111222", edad=edad, talle="S"),
+    ]
+
+    inscripcion = servicio.inscribir(
+        crear_solicitud(actividad=actividad, visitantes=visitantes)
+    )
+
+    assert inscripcion.visitantes[0].edad == edad
+
+
+@pytest.mark.parametrize(
+    "anticipacion",
+    [timedelta(hours=24), timedelta(hours=3), timedelta(minutes=15)],
+    ids=["24-horas-antes", "3-horas-antes", "15-minutos-antes"],
+)
+def test_inscripcion_dentro_de_la_ventana_pasa(
+    servicio, reloj, anticipacion
+):
+    reloj.momento = HORARIO - anticipacion
+
+    inscripcion = servicio.inscribir(crear_solicitud())
+
+    assert inscripcion.horario == HORARIO
+
+
+def test_inscripcion_con_mas_de_24_horas_de_anticipacion_falla(
+    servicio, reloj
+):
+    reloj.momento = HORARIO - timedelta(hours=24, minutes=1)
+
+    with pytest.raises(InscripcionNoHabilitadaError):
+        servicio.inscribir(crear_solicitud())
+
+
+@pytest.mark.parametrize(
+    "momento",
+    [
+        HORARIO - timedelta(minutes=14),
+        HORARIO,
+        HORARIO + timedelta(minutes=30),
+    ],
+    ids=["14-minutos-antes", "al-inicio", "turno-empezado"],
+)
+def test_inscripcion_a_menos_de_15_minutos_del_turno_falla(
+    servicio, reloj, momento
+):
+    reloj.momento = momento
+
+    with pytest.raises(InscripcionCerradaError):
+        servicio.inscribir(crear_solicitud())
+
+
+def test_visitante_ya_inscripto_en_otra_actividad_del_mismo_horario_falla(
+    servicio
+):
+    servicio.inscribir(crear_solicitud(actividad="Safari"))
+
+    with pytest.raises(VisitanteConInscripcionSuperpuestaError):
+        servicio.inscribir(crear_solicitud(actividad="Jardinería"))
+
+
+def test_visitante_ya_inscripto_en_el_mismo_turno_falla(servicio):
+    servicio.inscribir(crear_solicitud())
+
+    with pytest.raises(VisitanteConInscripcionSuperpuestaError):
+        servicio.inscribir(crear_solicitud())
+
+
+def test_inscripcion_superpuesta_no_descuenta_cupos(repositorio, servicio):
+    servicio.inscribir(crear_solicitud(actividad="Safari"))
+
+    with pytest.raises(VisitanteConInscripcionSuperpuestaError):
+        servicio.inscribir(crear_solicitud(actividad="Jardinería"))
+
+    jardineria = repositorio.obtener("Jardinería", HORARIO)
+    assert jardineria.cupos_disponibles == 10
+
+
+def test_visitante_inscripto_en_otro_horario_puede_inscribirse(
+    repositorio, servicio, reloj
+):
+    otro_horario = HORARIO + timedelta(hours=1)
+    repositorio.guardar(
+        Turno(actividad="Jardinería", inicio=otro_horario, cupo_total=10)
+    )
+    servicio.inscribir(crear_solicitud(actividad="Safari"))
+
+    inscripcion = servicio.inscribir(
+        crear_solicitud(actividad="Jardinería", horario=otro_horario)
+    )
+
+    assert inscripcion.horario == otro_horario
+
+
+def test_inscripcion_con_dni_repetido_en_la_misma_solicitud_falla(servicio):
+    visitantes = [
+        Visitante(nombre="Ana", dni="30111222", edad=25),
+        Visitante(nombre="Ana bis", dni="30111222", edad=25),
+    ]
+
+    with pytest.raises(DatosVisitanteInvalidosError):
+        servicio.inscribir(crear_solicitud(visitantes=visitantes))
